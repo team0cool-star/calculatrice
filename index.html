@@ -2,9 +2,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pic & Coud - Scientifique</title>
-
+    
     <!-- Icônes pour le mobile -->
     <link rel="icon" type="image/png" href="icon.png" />
     <link rel="apple-touch-icon" href="icon.png" />
@@ -14,233 +14,268 @@
     <style>
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-            -webkit-user-select: none;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-image: url('picetcoud.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            /* Superbe dégradé beige en fond d'écran général */
+            background: linear-gradient(135deg, #e6dfd3 0%, #f4f0e6 50%, #eae3d2 100%);
             background-attachment: fixed;
-            /* Utilisation du dvh (Dynamic Viewport Height) pour éviter que les barres mobiles masquent le bas */
-            height: 100vh;
-            height: 100dvh; 
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px;
+            min-height: 100vh;
+            padding-bottom: env(safe-area-inset-bottom); /* AJOUTEZ CETTE LIGNE ICI */
+        }
         }
 
-        .calculator {
-            background-color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+        .calculator-container {
+            text-align: center;
             width: 100%;
-            max-width: 400px;
-            /* S'assure que la calculatrice ne dépasse jamais de l'écran disponible */
-            max-height: 95vh; 
-            max-height: 95dvh;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            max-width: 460px;
+            padding: 30px 25px 25px 25px;
+            margin: 20px;
+            
+            /* --- CONFIGURATION DU LOGO EN FOND PAR TRANSPARENCE --- */
+            background-image: url('picetcoud.jpg');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: contain; /* Permet au logo de s'adapter sans être rogné */
+            background-color: rgba(245, 240, 230, 0.75); /* Voile beige très léger pour lier le fond et l'image */
+            background-blend-mode: overlay; /* Fusionne magnifiquement l'image et le fond du boîtier */
+            
+            border: 2px solid rgba(163, 132, 93, 0.4);
+            border-radius: 26px;
+            box-shadow: 0 20px 50px rgba(100, 90, 80, 0.25);
         }
 
-        .screen {
-            background-color: rgba(0, 0, 0, 0.05);
-            padding: 20px;
+        /* Écran transparent style "Verre d'argile" */
+        #txtDisplay {
+            color: #3d3228; /* Chiffres très sombres pour une lisibilité parfaite sur l'image */
             text-align: right;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            min-height: 110px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 30pt;
+            font-family: 'Consolas', monospace;
+            width: 100%;
+            height: 75px;
+            padding: 0 15px;
+            margin-bottom: 25px;
+            border: 2px solid #a3845d;
+            border-radius: 14px;
+            
+            /* Fond translucide légèrement opaque pour isoler l'écran du logo en fond */
+            background-color: rgba(238, 233, 222, 0.85); 
+            box-shadow: inset 0 3px 8px rgba(100, 90, 80, 0.2);
+            outline: none;
         }
 
-        .previous-operand {
-            color: #777;
-            font-size: 1.1rem;
-            min-height: 24px;
-            word-wrap: break-word;
-            word-break: break-all;
-        }
-
-        .current-operand {
-            color: #222;
-            font-size: 2.2rem;
-            font-weight: bold;
-            word-wrap: break-word;
-            word-break: break-all;
-            margin-top: 5px;
-        }
-
-        .buttons {
+        /* Grille des touches */
+        .grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            padding: 15px;
-            flex-grow: 1;
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 12px; 
         }
 
-        button {
-            border: none;
-            background-color: rgba(255, 255, 255, 0.7);
-            color: #333;
-            font-size: 1.3rem;
+        /* Boutons Chiffres : Très transparents avec texte contrasté */
+        .btn {
+            height: 65px;
+            font-size: 20pt;
             font-weight: 600;
-            padding: 15px 5px;
-            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 2px solid rgba(92, 82, 71, 0.4);
+            border-radius: 16px;
+            background-color: rgba(255, 255, 255, 0.25); /* Ultra transparent pour voir l'image derrière */
+            color: #3d3228; 
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: all 0.2s ease;
+            user-select: none;
+            backdrop-filter: blur(2px);
         }
 
-        button:active {
-            transform: scale(0.95);
-            background-color: rgba(0, 0, 0, 0.1);
+        .btn:hover {
+            background-color: rgba(255, 255, 255, 0.6);
+            border-color: rgba(92, 82, 71, 0.8);
         }
 
-        button.operator {
-            background-color: rgba(212, 163, 115, 0.4);
-            color: #8b5a2b;
+        .btn:active {
+            transform: scale(0.93); 
         }
 
-        button.clear, button.delete {
-            background-color: rgba(230, 57, 70, 0.1);
-            color: #e63946;
+        /* Touches Scientifiques (Taupe transparent) */
+        .btn-sci {
+            background-color: rgba(215, 205, 189, 0.35);
+            color: #4a3e31;
+            border: 2px solid rgba(125, 110, 93, 0.5);
+            font-size: 16pt;
+        }
+        .btn-sci:hover {
+            background-color: rgba(215, 205, 189, 0.7);
         }
 
-        button.span-two {
-            grid-column: span 2;
+        /* Opérateurs (Caramel transparent) */
+        .btn-op {
+            background-color: rgba(212, 184, 148, 0.35);
+            color: #876131;
+            border: 2px solid rgba(212, 184, 148, 0.8);
+        }
+        .btn-op:hover {
+            background-color: rgba(212, 184, 148, 0.7);
+            color: #3d3228;
         }
 
-        button.equals {
-            background-color: #d4a373;
-            color: white;
+        /* Touche C d'effacement (Terracotta transparent) */
+        .btn-clear {
+            background-color: rgba(214, 131, 112, 0.25);
+            color: #9c3f2b;
+            border: 2px solid rgba(214, 131, 112, 0.7);
+        }
+        .btn-clear:hover {
+            background-color: rgba(214, 131, 112, 0.6);
+            color: #fff;
+        }
+
+        /* Bouton Égal */
+        #btnEqual {
+            grid-column: span 4; 
+            height: 60px;
+            font-size: 24pt;
+            margin-top: 5px;
+            background: linear-gradient(90deg, rgba(195, 166, 129, 0.9), rgba(163, 132, 93, 0.9));
+            color: #ffffff;
+            border: 2px solid #a3845d;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(163, 132, 93, 0.2);
+            transition: all 0.2s ease;
         }
         
-        button.equals:active {
-            background-color: #b98555;
+        #btnEqual:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 6px 20px rgba(163, 132, 93, 0.4);
+        }
+        
+        #btnEqual:active {
+            transform: scale(0.97);
         }
     </style>
 </head>
 <body>
 
-    <div class="calculator">
-        <div class="screen">
-            <div id="previous-operand" class="previous-operand"></div>
-            <div id="current-operand" class="current-operand">0</div>
+    <div class="calculator-container">
+        
+        <input type="text" id="txtDisplay" value="0" readonly>
+        
+        <div class="grid">
+            <div class="btn btn-sci" onclick="calcScientific('sin')">sin</div>
+            <div class="btn btn-sci" onclick="calcScientific('cos')">cos</div>
+            <div class="btn btn-sci" onclick="calcScientific('tan')">tan</div>
+            <div class="btn btn-sci" onclick="insertValue(Math.PI.toFixed(6))">π</div>
+
+            <div class="btn btn-sci" onclick="calcScientific('square')">x²</div>
+            <div class="btn btn-sci" onclick="calcScientific('root')">√</div>
+            <div class="btn btn-sci" onclick="insertValue('(')">(</div>
+            <div class="btn btn-sci" onclick="insertValue(')')">)</div>
+
+            <div class="btn" onclick="insertValue('7')">7</div>
+            <div class="btn" onclick="insertValue('8')">8</div>
+            <div class="btn" onclick="insertValue('9')">9</div>
+            <div class="btn btn-op" onclick="insertValue('*')">×</div>
+
+            <div class="btn" onclick="insertValue('4')">4</div>
+            <div class="btn" onclick="insertValue('5')">5</div>
+            <div class="btn" onclick="insertValue('6')">6</div>
+            <div class="btn btn-op" onclick="insertValue('-')">-</div>
+
+            <div class="btn" onclick="insertValue('1')">1</div>
+            <div class="btn" onclick="insertValue('2')">2</div>
+            <div class="btn" onclick="insertValue('3')">3</div>
+            <div class="btn btn-op" onclick="insertValue('+')">+</div>
+
+            <div class="btn btn-clear" onclick="clearValue()">C</div>
+            <div class="btn" onclick="insertValue('0')">0</div>
+            <div class="btn" onclick="insertValue('.')">.</div>
+            <div class="btn btn-op" onclick="insertValue('/')">÷</div>
+            
+            <button id="btnEqual" onclick="evalStatement()">=</button>
         </div>
-        <div class="buttons">
-            <button onclick="clearScreen()" class="clear span-two">AC</button>
-            <button onclick="deleteNumber()" class="delete">DEL</button>
-            <button onclick="appendOperator('/')" class="operator">÷</button>
-            
-            <button onclick="appendNumber('7')">7</button>
-            <button onclick="appendNumber('8')">8</button>
-            <button onclick="appendNumber('9')">9</button>
-            <button onclick="appendOperator('*')" class="operator">×</button>
-            
-            <button onclick="appendNumber('4')">4</button>
-            <button onclick="appendNumber('5')">5</button>
-            <button onclick="appendNumber('6')">6</button>
-            <button onclick="appendOperator('-')" class="operator">-</button>
-            
-            <button onclick="appendNumber('1')">1</button>
-            <button onclick="appendNumber('2')">2</button>
-            <button onclick="appendNumber('3')">3</button>
-            <button onclick="appendOperator('+')" class="operator">+</button>
-            
-            <button onclick="appendNumber('.')">.</button>
-            <button onclick="appendNumber('0')">0</button>
-            <button onclick="compute()" class="equals span-two">=</button>
-        </div>
+    
     </div>
 
     <script>
-        let currentOperand = '0';
-        let previousOperand = '';
-        let operation = undefined;
+        let isClear = true;
 
-        const currentDisplay = document.getElementById('current-operand');
-        const previousDisplay = document.getElementById('previous-operand');
-
-        function updateDisplay() {
-            currentDisplay.innerText = currentOperand;
-            if (operation != null) {
-                previousDisplay.innerText = `${previousOperand} ${getOperatorSymbol(operation)}`;
+        function insertValue(value) {
+            const display = document.getElementById("txtDisplay");
+            if (isClear) {
+                display.value = value;
+                isClear = false;
             } else {
-                previousDisplay.innerText = '';
+                display.value += value;
             }
         }
 
-        function getOperatorSymbol(op) {
-            if (op === '*') return '×';
-            if (op === '/') return '÷';
-            return op;
+        function clearValue() {
+            document.getElementById("txtDisplay").value = "0";
+            isClear = true;
         }
 
-        function appendNumber(number) {
-            if (number === '.' && currentOperand.includes('.')) return;
-            if (currentOperand === '0' && number !== '.') {
-                currentOperand = number.toString();
-            } else {
-                currentOperand = currentOperand.toString() + number.toString();
+        function evalStatement() {
+            const display = document.getElementById("txtDisplay");
+            try {
+                let result = new Function("return " + display.value)();
+                if (result % 1 !== 0) {
+                    result = parseFloat(result.toFixed(6));
+                }
+                display.value = result;
+            } catch(e) {
+                display.value = "Erreur";
             }
-            updateDisplay();
+            isClear = true;
         }
 
-        function appendOperator(op) {
-            if (currentOperand === '') return;
-            if (previousOperand !== '') {
-                compute();
+        function calcScientific(type) {
+            const display = document.getElementById("txtDisplay");
+            let currentVal;
+            try {
+                currentVal = new Function("return " + display.value)();
+            } catch(e) {
+                display.value = "Erreur";
+                isClear = true;
+                return;
             }
-            operation = op;
-            previousOperand = currentOperand;
-            currentOperand = '';
-            updateDisplay();
-        }
 
-        function clearScreen() {
-            currentOperand = '0';
-            previousOperand = '';
-            operation = undefined;
-            updateDisplay();
-        }
-
-        function deleteNumber() {
-            if (currentOperand === '0') return;
-            currentOperand = currentOperand.toString().slice(0, -1);
-            if (currentOperand === '') currentOperand = '0';
-            updateDisplay();
-        }
-
-        function compute() {
-            let computation;
-            const prev = parseFloat(previousOperand);
-            const current = parseFloat(currentOperand);
-            if (isNaN(prev) || isNaN(current)) return;
-            switch (operation) {
-                case '+': computation = prev + current; break;
-                case '-': computation = prev - current; break;
-                case '*': computation = prev * current; break;
-                case '/': computation = prev / current; break;
-                default: return;
+            let result;
+            switch(type) {
+                case 'sin':
+                    result = Math.sin(currentVal * Math.PI / 180);
+                    break;
+                case 'cos':
+                    result = Math.cos(currentVal * Math.PI / 180);
+                    break;
+                case 'tan':
+                    result = Math.tan(currentVal * Math.PI / 180);
+                    break;
+                case 'square':
+                    result = Math.pow(currentVal, 2);
+                    break;
+                case 'root':
+                    if (currentVal < 0) {
+                        result = "Erreur";
+                    } else {
+                        result = Math.sqrt(currentVal);
+                    }
+                    break;
             }
-            currentOperand = computation.toString();
-            operation = undefined;
-            previousOperand = '';
-            updateDisplay();
+
+            if (typeof result === 'number' && result % 1 !== 0) {
+                result = parseFloat(result.toFixed(6));
+            }
+
+            display.value = result;
+            isClear = true;
         }
     </script>
 </body>
