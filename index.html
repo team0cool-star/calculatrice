@@ -2,10 +2,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pic & Coud - Scientifique</title>
     
-    <!-- Icônes pour le mobile -->
     <link rel="icon" type="image/png" href="icon.png" />
     <link rel="apple-touch-icon" href="icon.png" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -14,6 +13,10 @@
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         body {
@@ -21,22 +24,26 @@
             background: linear-gradient(135deg, #e6dfd3 0%, #f4f0e6 50%, #eae3d2 100%);
             background-attachment: fixed;
             font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding-bottom: env(safe-area-inset-bottom); /* AJOUTEZ CETTE LIGNE ICI */
-        }
+            min-height: 100dvh; /* Utilise la hauteur dynamique sur mobile */
+            padding: 15px;
+            padding-bottom: calc(15px + env(safe-area-inset-bottom)); /* Protège le bouton = sur mobile */
         }
 
         .calculator-container {
             text-align: center;
             width: 100%;
-            max-width: 460px;
-            padding: 30px 25px 25px 25px;
-            margin: 20px;
+            max-width: 430px;
+            /* Gestion adaptative de la hauteur pour les petits écrans de smartphone */
+            max-height: 92vh;
+            max-height: 92dvh;
+            padding: 25px 20px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             
             /* --- CONFIGURATION DU LOGO EN FOND PAR TRANSPARENCE --- */
             background-image: url('picetcoud.jpg');
@@ -55,12 +62,12 @@
         #txtDisplay {
             color: #3d3228; /* Chiffres très sombres pour une lisibilité parfaite sur l'image */
             text-align: right;
-            font-size: 30pt;
+            font-size: 26pt;
             font-family: 'Consolas', monospace;
             width: 100%;
-            height: 75px;
+            height: 70px;
             padding: 0 15px;
-            margin-bottom: 25px;
+            margin-bottom: 18px;
             border: 2px solid #a3845d;
             border-radius: 14px;
             
@@ -74,13 +81,14 @@
         .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr); 
-            gap: 12px; 
+            gap: 10px; 
+            flex-grow: 1;
         }
 
         /* Boutons Chiffres : Très transparents avec texte contrasté */
         .btn {
-            height: 65px;
-            font-size: 20pt;
+            height: 58px;
+            font-size: 18pt;
             font-weight: 600;
             cursor: pointer;
             border: 2px solid rgba(92, 82, 71, 0.4);
@@ -93,6 +101,7 @@
             transition: all 0.2s ease;
             user-select: none;
             backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
         }
 
         .btn:hover {
@@ -109,7 +118,7 @@
             background-color: rgba(215, 205, 189, 0.35);
             color: #4a3e31;
             border: 2px solid rgba(125, 110, 93, 0.5);
-            font-size: 16pt;
+            font-size: 14pt;
         }
         .btn-sci:hover {
             background-color: rgba(215, 205, 189, 0.7);
@@ -140,8 +149,8 @@
         /* Bouton Égal */
         #btnEqual {
             grid-column: span 4; 
-            height: 60px;
-            font-size: 24pt;
+            height: 55px;
+            font-size: 22pt;
             margin-top: 5px;
             background: linear-gradient(90deg, rgba(195, 166, 129, 0.9), rgba(163, 132, 93, 0.9));
             color: #ffffff;
@@ -159,6 +168,15 @@
         
         #btnEqual:active {
             transform: scale(0.97);
+        }
+        
+        /* Optimisation spéciale pour les très petits smartphones anciens */
+        @media (max-height: 680px) {
+            .calculator-container { padding: 15px 15px 10px 15px; }
+            #txtDisplay { height: 60px; font-size: 22pt; margin-bottom: 10px; }
+            .btn { height: 46px; font-size: 15pt; border-radius: 12px; }
+            .btn-sci { font-size: 12pt; }
+            #btnEqual { height: 46px; font-size: 18pt; }
         }
     </style>
 </head>
